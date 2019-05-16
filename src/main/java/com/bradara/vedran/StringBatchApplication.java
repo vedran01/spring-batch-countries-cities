@@ -1,6 +1,5 @@
 package com.bradara.vedran;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -47,6 +46,7 @@ public class StringBatchApplication {
 
 	@Configuration
 	static class Step1Configuration{
+
 		@Bean
 		JsonItemReader<Country> jsonCountryReader(@Value("${app.country-input}") Resource resource){
 			return new JsonItemReaderBuilder<Country>()
@@ -73,7 +73,6 @@ public class StringBatchApplication {
 		FlatFileItemReader<City> csvCityReader(@Value("${app.city-input}") Resource resource){
 			return new FlatFileItemReaderBuilder<City>()
 							.name("city-reader")
-							//.resource(new ClassPathResource("input/cities.csv"))
 							.resource(resource )
 							.linesToSkip(1)
 							.targetType(City.class)
@@ -171,9 +170,9 @@ public class StringBatchApplication {
 
 	@Bean
 	Job job1(@Autowired @Qualifier("step1") Step countriesToDB ,
-							 @Autowired @Qualifier("step2") Step citiesToDB,
-							 @Autowired @Qualifier("step3") Step countriesToJson,
-					      @Autowired @Qualifier("step4") Step locationsToMongo
+					 @Autowired @Qualifier("step2") Step citiesToDB,
+					 @Autowired @Qualifier("step3") Step countriesToJson,
+					 @Autowired @Qualifier("step4") Step countriesToMongo
 	){
 
 		return jobBuilderFactory.get("job1")
@@ -181,7 +180,7 @@ public class StringBatchApplication {
 						.start(countriesToDB)
 						.next(citiesToDB)
 						.next(countriesToJson)
-						.next(locationsToMongo)
+						.next(countriesToMongo)
 						.build();
 	}
 
